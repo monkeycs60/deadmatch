@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "DeadData" ALTER COLUMN "birthdate" SET DATA TYPE TEXT,
-ALTER COLUMN "deathdate" SET DATA TYPE TEXT;
