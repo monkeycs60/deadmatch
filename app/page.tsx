@@ -5,7 +5,6 @@ import Image from 'next/image';
 export default async function Home() {
 	const session = await auth();
 	console.log(session);
-  //hello
 	return (
 		<div className='bg-zinc-500 px-4 py-6'>
 			<h2>Hello toi</h2>
