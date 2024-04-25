@@ -1,53 +1,64 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { parse } from 'csv-parse';
 import prisma from '@/lib/prisma';
 
+export async function POST(request: NextRequest) {
+	const formData = await request.formData();
+	const csvFile = formData.get('csvFile') as File | null;
+	console.log(csvFile);
 
-export default async function handler(
-	req: NextApiRequest,
-	res: NextApiResponse
-) {
-	if (req.method === 'POST') {
-		const csvData = req.body;
+	if (!csvFile) {
+		return NextResponse.json(
+			{ message: 'No CSV file provided' },
+			{ status: 400 }
+		);
+	}
 
-		const records = await new Promise<any[]>((resolve, reject) => {
-			parse(csvData, (err: unknown, records: unknown) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(records as any[]);
-				}
-			});
+	const csvData = await csvFile.text();
+	console.log(csvData);
+
+	const records = await new Promise<any[]>((resolve, reject) => {
+		parse(csvData, (err, records) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(records);
+			}
 		});
+	});
 
-		for (const record of records) {
-			const [
+	for (const record of records) {
+		const [
+			placement,
+			lastname,
+			firstname,
+			gender,
+			birthdate,
+			birthplace,
+			birthcountry,
+			deathdate,
+		] = record;
+
+		await prisma.deadData.create({
+			data: {
 				lastname,
 				firstname,
 				gender,
 				birthdate,
+				// birthdate: birthdate ? new Date(birthdate) : null,
 				birthplace,
 				birthcountry,
 				deathdate,
-			] = record;
-
-			await prisma.deadData.create({
-				data: {
-					lastname,
-					firstname,
-					gender,
-					birthdate: birthdate ? new Date(birthdate) : null,
-					birthplace,
-					birthcountry,
-					deathdate: deathdate ? new Date(deathdate) : null,
-				},
-			});
-		}
-
-		res.status(200).json({
-			message: 'CSV data parsed and saved to database',
+				// deathdate: deathdate ? new Date(deathdate) : null,
+			},
 		});
-	} else {
-		res.status(405).json({ message: 'Method not allowed' });
 	}
+
+	return NextResponse.json({
+		message: 'CSV data parsed and saved to database',
+	});
+}
+
+export async function GET(request: NextRequest) {
+	return NextResponse.json({ message: 'Method not allowed' }, { status: 405 });
 }

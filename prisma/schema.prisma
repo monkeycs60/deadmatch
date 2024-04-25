@@ -81,8 +81,8 @@ model DeadData {
   lastname String?
   firstname String?
   gender String?
-  birthdate DateTime?
+  birthdate String?
   birthplace String?
   birthcountry String?
-  deathdate DateTime?
+  deathdate String?
 }
