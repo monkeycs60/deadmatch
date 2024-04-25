@@ -63,6 +63,20 @@ CREATE TABLE "Authenticator" (
     CONSTRAINT "Authenticator_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "DeadData" (
+    "id" TEXT NOT NULL,
+    "lastname" TEXT,
+    "firstname" TEXT,
+    "gender" TEXT,
+    "birthdate" TIMESTAMP(3),
+    "birthplace" TEXT,
+    "birthcountry" TEXT,
+    "deathdate" TIMESTAMP(3),
+
+    CONSTRAINT "DeadData_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 

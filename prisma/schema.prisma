@@ -75,3 +75,14 @@ model Authenticator {
  
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model DeadData {
+  id String @id @default(cuid())
+  lastname String?
+  firstname String?
+  gender String?
+  birthdate DateTime?
+  birthplace String?
+  birthcountry String?
+  deathdate DateTime?
+}
